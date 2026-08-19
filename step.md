@@ -57,19 +57,31 @@ This is the source code for the rich, interactive UI you see in your browser. It
 
 ---
 
-## 4. Documentation & Sandbox Files
+---
+
+## 4. Vercel Serverless Endpoints (`api/`)
+When deploying to Vercel, traditional Node background servers do not run continuously. Vercel automatically exposes files in the `api/` directory as serverless endpoints.
+
+*   **`api/jobs.js`**
+    *   **What it does:** Scrapes real LinkedIn and multi-source job postings in real-time on Vercel without heavy browser overhead.
+*   **`api/telemetry.js`**
+    *   **What it does:** Serves pipeline telemetry, circuit breaker metrics, and identity pool status to the dashboard.
+*   **`api/health.js`**
+    *   **What it does:** Health-check endpoint for Vercel deployment verification.
+
+---
+
+## 5. Documentation & Sandbox Files
 
 *   **`README.md`**
     *   **What it does:** Project overview, how to run it, API documentation, and the **Defense & Ownership Guide** for your follow-up call.
 *   **`DECISIONS.md`**
-    *   **What it does:** A deep dive into the engineering tradeoffs made during the project (e.g., why Playwright instead of `curl`).
+    *   **What it does:** A deep dive into the engineering tradeoffs made during the project.
 *   **`real-platform-notes.md`**
     *   **What it does:** Analysis of how real platforms (LinkedIn, Naukri, Glassdoor) detect bots.
 *   **`DEPLOYMENT.md`**
-    *   **What it does:** Step-by-step instructions for deploying the Frontend on Vercel and Backend on Render/Railway.
-*   **`render.yaml` & `scraper/Dockerfile`**
-    *   **What it does:** Docker and Render infrastructure configs with Playwright and Chromium pre-installed for 1-click cloud deployments.
+    *   **What it does:** 1-step Vercel deployment guide.
 *   **`vercel.json`**
-    *   **What it does:** Configuration enabling seamless Vite React deployment on Vercel.
+    *   **What it does:** Configuration routing `/api/*` to serverless endpoints and everything else to the Vite React dashboard.
 *   **`simple-concept.js`**
-    *   **What it does:** A stripped-down, pure Javascript file that simulates Identity Rotation, Pacing, and Circuit Breakers without any of the complex Typescript or Playwright overhead. It's your cheat sheet for understanding the architecture concepts easily.
+    *   **What it does:** A stripped-down, pure Javascript file that simulates Identity Rotation, Pacing, and Circuit Breakers.
