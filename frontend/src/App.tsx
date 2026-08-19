@@ -20,6 +20,11 @@ import {
   Play,
   RotateCw,
   SlidersHorizontal,
+  Layers,
+  GitFork,
+  ArrowRight,
+  Network,
+  Server,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -418,6 +423,10 @@ export function App() {
               <TabsTrigger value="drift" className="rounded-lg py-2 px-4 text-xs sm:text-sm font-medium flex items-center gap-2">
                 <RotateCw className="w-4 h-4" />
                 <span>Drift Simulator</span>
+              </TabsTrigger>
+              <TabsTrigger value="architecture" className="rounded-lg py-2 px-4 text-xs sm:text-sm font-medium flex items-center gap-2">
+                <Layers className="w-4 h-4 text-purple-400" />
+                <span>System Architecture</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -915,6 +924,163 @@ export function App() {
                   ) : (
                     driftSimLogs.map((log, lidx) => <p key={lidx}>{log}</p>)
                   )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* ═══════════ TAB 5: SYSTEM ARCHITECTURE & FLOW ═══════════ */}
+          <TabsContent value="architecture" className="space-y-6">
+            <Card className="border-purple-500/30 bg-purple-950/10 backdrop-blur-xl shadow-2xl">
+              <CardHeader className="p-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                    <Layers className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl">Visual System Architecture & Technical Flow</CardTitle>
+                    <CardDescription>
+                      End-to-end multi-source ingestion pipeline: Stealth Browser Automation, 5-Identity Rotation, Paced Throttle, Selector Fallbacks & Circuit Breaker.
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 pt-0 space-y-8">
+                {/* 1. End-to-End Visual Nodes Map */}
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                    <Network className="w-4 h-4" /> Pipeline Node Topology
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    {/* Node 1 */}
+                    <div className="p-4 rounded-xl border border-border/60 bg-card/80 space-y-2 relative group hover:border-primary/50 transition-colors">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
+                        <span>NODE 01</span>
+                        <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/20">Client</Badge>
+                      </div>
+                      <div className="font-semibold text-sm flex items-center gap-1.5 text-foreground">
+                        <Sparkles className="w-4 h-4 text-amber-400" /> React 19 UI
+                      </div>
+                      <p className="text-xs text-muted-foreground">Vite, Tailwind v4, shadcn console UI sending query parameters.</p>
+                    </div>
+
+                    {/* Node 2 */}
+                    <div className="p-4 rounded-xl border border-border/60 bg-card/80 space-y-2 relative group hover:border-cyan-500/50 transition-colors">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
+                        <span>NODE 02</span>
+                        <Badge variant="outline" className="text-[10px] bg-cyan-500/10 text-cyan-400 border-cyan-500/20">REST API</Badge>
+                      </div>
+                      <div className="font-semibold text-sm flex items-center gap-1.5 text-foreground">
+                        <Server className="w-4 h-4 text-cyan-400" /> Express Router
+                      </div>
+                      <p className="text-xs text-muted-foreground">Handles `/api/jobs` and `/api/telemetry` requests with CORS validation.</p>
+                    </div>
+
+                    {/* Node 3 */}
+                    <div className="p-4 rounded-xl border border-purple-500/30 bg-purple-950/20 space-y-2 relative group hover:border-purple-500/60 transition-colors">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
+                        <span>NODE 03</span>
+                        <Badge variant="outline" className="text-[10px] bg-purple-500/10 text-purple-400 border-purple-500/20">Core Stealth</Badge>
+                      </div>
+                      <div className="font-semibold text-sm flex items-center gap-1.5 text-foreground">
+                        <Shield className="w-4 h-4 text-purple-400" /> Stealth Engine
+                      </div>
+                      <p className="text-xs text-muted-foreground">Rotates 5 browser identities (User-Agent, viewports, persisted session cookies).</p>
+                    </div>
+
+                    {/* Node 4 */}
+                    <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/20 space-y-2 relative group hover:border-emerald-500/60 transition-colors">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
+                        <span>NODE 04</span>
+                        <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20">Adapters</Badge>
+                      </div>
+                      <div className="font-semibold text-sm flex items-center gap-1.5 text-foreground">
+                        <GitFork className="w-4 h-4 text-emerald-400" /> Sources Registry
+                      </div>
+                      <p className="text-xs text-muted-foreground">Parallel execution: LinkedIn Guest API + Naukri Playwright Browser + Sandbox Target.</p>
+                    </div>
+
+                    {/* Node 5 */}
+                    <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-950/20 space-y-2 relative group hover:border-amber-500/60 transition-colors">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
+                        <span>NODE 05</span>
+                        <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-400 border-amber-500/20">Resilience</Badge>
+                      </div>
+                      <div className="font-semibold text-sm flex items-center gap-1.5 text-foreground">
+                        <Activity className="w-4 h-4 text-amber-400" /> Circuit & Fallback
+                      </div>
+                      <p className="text-xs text-muted-foreground">Multi-selector strategy fallback on HTML drift + 30s circuit breaker cooldown on blocks.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Visual Sequence Flow Trace */}
+                <div className="space-y-4 pt-2">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                    <Activity className="w-4 h-4" /> End-to-End Execution Sequence
+                  </h3>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border/50 bg-background/50 text-xs font-mono">
+                      <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold shrink-0">1</div>
+                      <div className="space-y-1">
+                        <div className="text-foreground font-semibold flex items-center gap-2">
+                          User Request Dispatch <ArrowRight className="w-3 h-3 text-muted-foreground" /> <code className="text-primary">GET /api/jobs?source=all&q=React&loc=India</code>
+                        </div>
+                        <p className="text-muted-foreground text-[11px]">The dashboard fires a unified REST query across selected platforms.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border/50 bg-background/50 text-xs font-mono">
+                      <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0">2</div>
+                      <div className="space-y-1">
+                        <div className="text-foreground font-semibold flex items-center gap-2">
+                          Circuit Breaker Pre-Check <ArrowRight className="w-3 h-3 text-muted-foreground" /> <code className="text-amber-400">CircuitBreaker.isOpen()</code>
+                        </div>
+                        <p className="text-muted-foreground text-[11px]">Verifies the source isn't currently under a 30s cooldown from prior bot blocks. If tripped, graceful degradation notice is returned.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border/50 bg-background/50 text-xs font-mono">
+                      <div className="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold shrink-0">3</div>
+                      <div className="space-y-1">
+                        <div className="text-foreground font-semibold flex items-center gap-2">
+                          Identity & Pacing Initialization <ArrowRight className="w-3 h-3 text-muted-foreground" /> <code className="text-purple-400">IdentityPool.next() + PacedThrottle.wait()</code>
+                        </div>
+                        <p className="text-muted-foreground text-[11px]">Acquires the next available browser fingerprint and introduces 1.5s–4s jittered delay to defeat bot timing checks.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border/50 bg-background/50 text-xs font-mono">
+                      <div className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold shrink-0">4</div>
+                      <div className="space-y-1">
+                        <div className="text-foreground font-semibold flex items-center gap-2">
+                          Stealth Playwright Execution <ArrowRight className="w-3 h-3 text-muted-foreground" /> <code className="text-cyan-400">launchStealthContext(identity)</code>
+                        </div>
+                        <p className="text-muted-foreground text-[11px]">Boots browser context with `navigator.webdriver` cloaked, realistic language headers, and session cookie restoration.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border/50 bg-background/50 text-xs font-mono">
+                      <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">5</div>
+                      <div className="space-y-1">
+                        <div className="text-foreground font-semibold flex items-center gap-2">
+                          Selector Fallback Resolution <ArrowRight className="w-3 h-3 text-muted-foreground" /> <code className="text-emerald-400">resolveSelectorStrategy(strategies)</code>
+                        </div>
+                        <p className="text-muted-foreground text-[11px]">Evaluates primary CSS selectors. If website layout evolved (markup drift), it falls back to backup selector arrays automatically.</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border/50 bg-background/50 text-xs font-mono">
+                      <div className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold shrink-0">6</div>
+                      <div className="space-y-1">
+                        <div className="text-foreground font-semibold flex items-center gap-2">
+                          Standardized Result Stream <ArrowRight className="w-3 h-3 text-muted-foreground" /> <code className="text-blue-400">res.json({`{ jobs, telemetry }`})</code>
+                        </div>
+                        <p className="text-muted-foreground text-[11px]">Deduplicates job postings across sources, updates live telemetry logs, and renders cards on the UI.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
