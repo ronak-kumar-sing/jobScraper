@@ -75,31 +75,34 @@ export const naukriAdapter: SourceAdapter = {
     const location = query.location || "";
     const limit = query.limit || 20;
 
-    // Build Naukri search URL
-    const slug = keyword.toLowerCase().replace(/\s+/g, "-");
-    let searchUrl = `https://www.naukri.com/${slug}-jobs?k=${encodeURIComponent(keyword)}`;
-    if (location) {
-      searchUrl += `&l=${encodeURIComponent(location)}`;
-    }
+    // Build canonical Naukri search URL (handles location slugs correctly)
+    const slug = keyword.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
+    const locSlug = location ? location.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-") : "";
+
+    let searchUrl = locSlug
+      ? `https://www.naukri.com/${slug}-jobs-in-${locSlug}?k=${encodeURIComponent(keyword)}&l=${encodeURIComponent(location)}`
+      : `https://www.naukri.com/${slug}-jobs?k=${encodeURIComponent(keyword)}`;
 
     console.log(`[Naukri] Navigating to: ${searchUrl}`);
 
     await page.goto(searchUrl, {
       waitUntil: "domcontentloaded",
-      timeout: 25000,
+      timeout: 30000,
     });
 
-    // Wait for job cards to render (Naukri is fully JS-rendered)
+    // Trigger slight scroll to fire lazy hydration of job tuples
+    await page.evaluate(() => window.scrollBy(0, 400)).catch(() => {});
+
+    // Wait for job cards to render
     try {
       await page.waitForSelector(
-        ".srp-jobtuple-wrapper, .cust-job-tuple, [data-job-id]",
-        { timeout: 10000 }
+        ".srp-jobtuple-wrapper, .cust-job-tuple, [data-job-id], a.title",
+        { timeout: 15000 }
       );
     } catch {
       console.warn(
-        "[Naukri] No job cards appeared within timeout — page may be blocked"
+        "[Naukri] No job cards appeared within timeout — checking fallbacks"
       );
-      return [];
     }
 
     // Determine which selector strategy matches

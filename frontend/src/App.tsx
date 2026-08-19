@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import mermaid from "mermaid";
 import {
   Search,
   Shield,
@@ -75,6 +76,34 @@ interface TelemetryData {
 
 const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 
+function MermaidChart({ chart }: { chart: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (containerRef.current) {
+      const id = `mermaid-${Math.random().toString(36).substring(2, 9)}`;
+      mermaid.render(id, chart).then(({ svg }) => {
+        if (isMounted && containerRef.current) {
+          containerRef.current.innerHTML = svg;
+        }
+      }).catch((err) => {
+        console.error("Mermaid render error:", err);
+      });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [chart]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-full overflow-x-auto flex justify-center p-4 bg-slate-950/80 rounded-xl border border-purple-500/20 shadow-inner min-h-[220px]"
+    />
+  );
+}
+
 export function App() {
   // ── State ──
   const [keyword, setKeyword] = useState("Software Engineer");
@@ -94,6 +123,24 @@ export function App() {
   const [isDriftTesting, setIsDriftTesting] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "dark",
+      securityLevel: "loose",
+      themeVariables: {
+        darkMode: true,
+        background: "#0d0f17",
+        primaryColor: "#8b5cf6",
+        primaryTextColor: "#f3f4f6",
+        primaryBorderColor: "#a855f7",
+        lineColor: "#38bdf8",
+        secondaryColor: "#0ea5e9",
+        tertiaryColor: "#f59e0b",
+      },
+    });
+  }, []);
 
   // ── Theme toggle ──
   useEffect(() => {
@@ -1014,10 +1061,78 @@ export function App() {
                   </div>
                 </div>
 
-                {/* 2. Visual Sequence Flow Trace */}
+                {/* 2. Mermaid Interactive Flowchart Diagram */}
                 <div className="space-y-4 pt-2">
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-purple-300 flex items-center gap-2">
-                    <Activity className="w-4 h-4" /> End-to-End Execution Sequence
+                    <GitFork className="w-4 h-4 text-purple-400" /> Interactive Flowchart Diagram
+                  </h3>
+                  <MermaidChart chart={`
+graph TD
+    A["Client UI (React 19 Console)"] -->|1. GET /api/jobs| B["Express Router (:5000)"]
+    B -->|2. Check Health| C{"Circuit Breaker"}
+    C -->|Open / Cooling| D["Return Degraded Status"]
+    C -->|Closed / Healthy| E["Identity Pool Manager"]
+    E -->|3. Get 1 of 5 Fingerprints| F["PacedThrottle Jitter"]
+    F -->|4. Sleep 1.5s - 4.0s| G["Stealth Playwright Context"]
+    G -->|5. Parallel Execution| H{"Sources Registry"}
+    H -->|LinkedIn| I["LinkedIn Guest Adapter"]
+    H -->|Naukri| J["Naukri Stealth Browser"]
+    H -->|Mock Sandbox| K["Sandbox Target Engine"]
+    I --> L["Selector Fallback Parser"]
+    J --> L
+    K --> L
+    L -->|6. Dedup & Validate| M["Standardized JSON Stream"]
+    M -->|7. Display Live Jobs & Telemetry| A
+                  `} />
+                </div>
+
+                {/* 3. Mermaid Sequence Diagram Trace */}
+                <div className="space-y-4 pt-2">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-purple-400" /> Ingestion & Resilience Sequence Flow
+                  </h3>
+                  <MermaidChart chart={`
+sequenceDiagram
+    autonumber
+    actor Dashboard as React Dashboard
+    participant API as Express API Router
+    participant CB as Circuit Breaker
+    participant Pool as Identity Pool
+    participant Throttle as PacedThrottle
+    participant Browser as Stealth Playwright
+    participant Target as Naukri / LinkedIn Target
+    participant Parser as Selector Fallback Parser
+
+    Dashboard->>API: GET /api/jobs?source=all&q=React
+    API->>CB: isOpen()?
+    alt Circuit Breaker Open (Cooling Down)
+        CB-->>API: Tripped (30s Cooldown Active)
+        API-->>Dashboard: Return Circuit Warning Notice
+    else Circuit Breaker Closed (Healthy)
+        CB-->>API: OK (Healthy)
+        API->>Pool: acquireNextIdentity()
+        Pool-->>API: Return UA, Viewport, Cookies
+        API->>Throttle: wait() (1.5s-4.0s Jitter)
+        Throttle-->>API: Delay Completed
+        API->>Browser: launchStealthContext(identity)
+        Browser->>Target: GET searchUrl (Stealth Headers)
+        Target-->>Browser: HTML / Rendered DOM
+        Browser->>Parser: resolveSelectorStrategy()
+        alt Primary Selector (.srp-jobtuple) Matches
+            Parser-->>API: Return Parsed Job Cards
+        else Layout Drifted -> Fallback Selector (.cust-job-tuple)
+            Parser-->>API: Return Fallback Job Cards
+        end
+        API->>CB: recordSuccess()
+        API-->>Dashboard: Return Live Jobs + Telemetry Payload
+    end
+                  `} />
+                </div>
+
+                {/* 4. Visual Sequence Flow Trace */}
+                <div className="space-y-4 pt-2">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                    <Layers className="w-4 h-4" /> Step-by-Step Execution Trace
                   </h3>
                   
                   <div className="space-y-3">
