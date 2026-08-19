@@ -103,6 +103,9 @@ export async function launchStealthContext(identity: Identity): Promise<BrowserC
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--disable-gpu",
+      "--window-size=1920,1080",
     ],
     proxy: identity.proxy
       ? { server: identity.proxy.server, username: identity.proxy.username, password: identity.proxy.password }
@@ -120,24 +123,26 @@ export async function launchStealthContext(identity: Identity): Promise<BrowserC
     timezoneId: TIMEZONES[tzIdx % TIMEZONES.length],
     permissions: ["geolocation"],
     extraHTTPHeaders: {
-      "Accept-Language": "en-IN,en;q=0.9,hi;q=0.8",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+      "Accept-Language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
       "sec-ch-ua": '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
       "sec-ch-ua-mobile": "?0",
       "sec-ch-ua-platform": '"macOS"',
+      "sec-fetch-dest": "document",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-site": "none",
+      "sec-fetch-user": "?1",
+      "upgrade-insecure-requests": "1",
     },
   });
 
-  // Evasion: override navigator.webdriver to false
+  // Evasion: override navigator.webdriver, chrome runtime, and permissions
   await context.addInitScript(() => {
     Object.defineProperty(navigator, "webdriver", { get: () => false });
-    // Spoof plugins count (real Chrome has > 0 plugins)
-    Object.defineProperty(navigator, "plugins", {
-      get: () => [1, 2, 3, 4, 5],
-    });
-    // Spoof languages
-    Object.defineProperty(navigator, "languages", {
-      get: () => ["en-IN", "en-US", "en"],
-    });
+    Object.defineProperty(navigator, "plugins", { get: () => [1, 2, 3, 4, 5] });
+    Object.defineProperty(navigator, "languages", { get: () => ["en-IN", "en-US", "en"] });
+    // @ts-ignore
+    window.chrome = { runtime: {}, loadTimes: () => {}, csi: () => {}, app: {} };
   });
 
   return context;

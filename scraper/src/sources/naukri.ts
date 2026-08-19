@@ -85,23 +85,28 @@ export const naukriAdapter: SourceAdapter = {
 
     console.log(`[Naukri] Navigating to: ${searchUrl}`);
 
-    await page.goto(searchUrl, {
-      waitUntil: "domcontentloaded",
-      timeout: 30000,
-    });
-
-    // Trigger slight scroll to fire lazy hydration of job tuples
-    await page.evaluate(() => window.scrollBy(0, 400)).catch(() => {});
+    try {
+      await page.goto(searchUrl, {
+        waitUntil: "domcontentloaded",
+        timeout: 25000,
+      });
+      // Allow client-side React hydration to complete
+      await page.waitForTimeout(3000);
+      await page.evaluate(() => window.scrollBy(0, 500)).catch(() => {});
+      await page.waitForTimeout(1000);
+    } catch (navErr) {
+      console.warn(`[Naukri] Navigation warning: ${(navErr as Error).message}`);
+    }
 
     // Wait for job cards to render
     try {
       await page.waitForSelector(
-        ".srp-jobtuple-wrapper, .cust-job-tuple, [data-job-id], a.title",
-        { timeout: 15000 }
+        ".srp-jobtuple-wrapper, .cust-job-tuple, [data-job-id], a.title, .jobTuple",
+        { timeout: 10000 }
       );
     } catch {
       console.warn(
-        "[Naukri] No job cards appeared within timeout — checking fallbacks"
+        "[Naukri] No primary job cards appeared within timeout — checking fallbacks"
       );
     }
 
