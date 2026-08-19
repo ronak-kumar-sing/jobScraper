@@ -59,29 +59,22 @@ This is the source code for the rich, interactive UI you see in your browser. It
 
 ---
 
-## 4. Vercel Serverless Endpoints (`api/`)
-When deploying to Vercel, traditional Node background servers do not run continuously. Vercel automatically exposes files in the `api/` directory as serverless endpoints.
+## 4. Deployment & Infrastructure Files
 
-*   **`api/jobs.js`**
-    *   **What it does:** Scrapes real LinkedIn and multi-source job postings in real-time on Vercel without heavy browser overhead.
-*   **`api/telemetry.js`**
-    *   **What it does:** Serves pipeline telemetry, circuit breaker metrics, and identity pool status to the dashboard.
-*   **`api/health.js`**
-    *   **What it does:** Health-check endpoint for Vercel deployment verification.
+*   **`render.yaml` & `scraper/Dockerfile`**
+    *   **What it does:** Docker and Render infrastructure configuration with Playwright and Chromium pre-installed for 1-click cloud hosting.
+*   **`DEPLOYMENT.md`**
+    *   **What it does:** Step-by-step guide for deploying the complete application on Render.
 
 ---
 
 ## 5. Documentation & Sandbox Files
 
 *   **`README.md`**
-    *   **What it does:** Project overview, how to run it, API documentation, and the **Defense & Ownership Guide** for your follow-up call.
+    *   **What it does:** Project overview, architecture diagrams, API docs, and the **Defense & Ownership Guide** for your review call.
 *   **`DECISIONS.md`**
     *   **What it does:** A deep dive into the engineering tradeoffs made during the project.
 *   **`real-platform-notes.md`**
     *   **What it does:** Analysis of how real platforms (LinkedIn, Naukri, Glassdoor) detect bots.
-*   **`DEPLOYMENT.md`**
-    *   **What it does:** 1-step Vercel deployment guide.
-*   **`vercel.json`**
-    *   **What it does:** Configuration routing `/api/*` to serverless endpoints and everything else to the Vite React dashboard.
 *   **`simple-concept.js`**
-    *   **What it does:** A stripped-down, pure Javascript file that simulates Identity Rotation, Pacing, and Circuit Breakers.
+    *   **What it does:** A stripped-down, pure Javascript file that simulates Identity Rotation, Pacing, and Circuit Breakers in plain English.

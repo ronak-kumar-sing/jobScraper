@@ -1,28 +1,48 @@
-# Deployment Guide — Vercel Monorepo
+# Deployment Guide — Render Hosting
 
-Deploying this project is a 1-step process on **Vercel**. Both the React Frontend and the Serverless Ingestion Engine run together on the same domain.
-
----
-
-## 🚀 1-Step Deployment on Vercel
-
-1. Push this repository to your **GitHub**.
-2. Go to the [Vercel Dashboard](https://vercel.com/new) and import your repository.
-3. Keep the default settings:
-   - **Framework Preset:** `Other` (or `Vite`)
-   - **Root Directory:** `./`
-   - **Build Command:** `cd frontend && npm install && npm run build`
-   - **Output Directory:** `frontend/dist`
-4. Click **Deploy**.
+This guide explains how to deploy the entire **Job Ingestion Engine & Interactive Dashboard** on **Render** using Docker.
 
 ---
 
-## 🛠️ How it works on Vercel
+## 🏗️ Architecture Overview
 
-* **Frontend:** Vercel builds the React app from `frontend/` and serves it on `/`.
-* **Serverless Backend (`api/`):** Vercel automatically exposes the files in the `api/` directory as serverless endpoints:
-  - `api/jobs.js` → `https://your-app.vercel.app/api/jobs`
-  - `api/telemetry.js` → `https://your-app.vercel.app/api/telemetry`
-  - `api/health.js` → `https://your-app.vercel.app/health`
+```
+┌────────────────────────────────────────────────────────┐
+│               Render Cloud Service (:5000)             │
+│                                                        │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │           React 19 Interactive Dashboard         │  │
+│  │          (Served static from /public)            │  │
+│  └──────────────────────────┬───────────────────────┘  │
+│                             │ REST API                 │
+│  ┌──────────────────────────▼───────────────────────┐  │
+│  │               Express API Server                 │  │
+│  │          /api/jobs      /api/telemetry           │  │
+│  └──────────────────────────┬───────────────────────┘  │
+│                             │                          │
+│  ┌──────────────────────────▼───────────────────────┐  │
+│  │     Playwright Stealth Engine & Chromium         │  │
+│  │     • 5-Identity Pool Rotation                   │  │
+│  │     • Circuit Breaker Resilience                 │  │
+│  │     • Selector Fallback (Drift Protection)       │  │
+│  └──────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────┘
+```
 
-No Docker, external servers, or extra configuration needed!
+---
+
+## 🚀 Step-by-Step Deployment on Render
+
+1. Push your repository to **GitHub**.
+2. Log in to [Render Dashboard](https://dashboard.render.com/).
+3. Click **New +** → **Blueprint** (or **Web Service**).
+4. Connect your GitHub repository.
+5. If using **Blueprint**, Render automatically reads `render.yaml`.
+6. If configuring manually:
+   - **Environment:** `Docker`
+   - **Docker Context Directory:** `scraper`
+   - **Dockerfile Path:** `scraper/Dockerfile`
+   - **Instance Type:** `Free`
+7. Click **Deploy Web Service**.
+
+Once deployed, Render gives you a public URL (e.g. `https://job-scraper-backend.onrender.com`), where both the Interactive Dashboard and the REST API run seamlessly together on the same port!
